@@ -1,59 +1,65 @@
-# MTLoRA: A Low-Rank Adaptation Approach for Efficient Multi-Task Learning
+<div align="center">
+
+<!-- Banner / Hero image -->
+<img src="faar_overview.png" width="90%" />
+
+# FAAR: Efficient Frequency-Aware Multi-Task Fine-Tuning via Automatic Rank Selection - CVPR 2026 
+
+<!-- Badges (edit as needed) -->
+<p>
+  <a href="https://github.com/Klodivio355/FAAR/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Klodivio355/FAAR?style=for-the-badge"></a>
+  <a href="https://github.com/Klodivio355/FAAR/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/Klodivio355/FAAR?style=for-the-badge"></a>
+  <a href="https://github.com/Klodivio355/FAAR/issues"><img alt="Issues" src="https://img.shields.io/github/issues/Klodivio355/FAAR?style=for-the-badge"></a>
+  <a href="https://github.com/Klodivio355/FAAR/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Klodivio355/FAAR?style=for-the-badge"></a>
+</p>
+
+</div>
+
+# FAAR: Efficient Frequency-Aware Multi-Task Fine-Tuning via Automatic Rank Selection
 
 ## Introduction
 
-This is the official implementation of the paper: **MTLoRA: A Low-Rank Adaptation Approach for Efficient Multi-Task Learning** developed at [Brown University SCALE lab](https://scale-lab.github.io).
+This is the official implementation of the paper: **FAAR: Efficient Frequency-Aware Multi-Task Fine-Tuning via Automatic Rank Selection**.
 
-This repository provides a Python-based implementation of MTLoRA including [`MTLoRALinear`](models/lora.py) (the main module) and MTL architectures. 
-
-The repository is built on top of [Swin-Transformer](https://github.com/microsoft/Swin-Transformer) and uses some modules from [Multi-Task-Learning-PyTorch](https://github.com/SimonVandenhende/Multi-Task-Learning-PyTorch).
+This repository expends on baseline python codebase [MTLoRA](https://github.com/scale-lab/mtlora). We provide our own implementations of our MTL tuner (PDRS) versions [`(DoRA Version)`](models/lora7.py) and [`(LoRA Version)`](models/lora8.py) as well as our decoder plug-in module [`TS-PD`](models/seg_hrnet.py).
 
 
 ## How to Run
 
-Running MTLoRA code, is very simmilar to Swin's codebase:
+Running FAAR code is very similar to our MTLoRA baseline:
 
 1. **Clone the repository**
     ```bash
-    git clone https://github.com/scale-lab/MTLoRA.git
-    cd MTLoRA
+    git clone https://github.com/Klodivio355/FAAR.git
+    cd FAAR
     ```
 
 2. **Install the prerequisites**
     - Install `PyTorch>=1.12.0` and `torchvision>=0.13.0` with `CUDA>=11.6`
     - Install dependencies: `pip install -r requirements.txt`
 
-3. **Run the code**
+3. **Run the Fine-Tuning**
     ```python
-    python -m torch.distributed.launch --nproc_per_node 1 --master_port 12345 main.py --cfg configs/mtlora/tiny_448/<config>.yaml --pascal <path to pascal database> --tasks semseg,normals,sal,human_parts --batch-size 32 --ckpt-freq=20 --epoch=300 --resume-backbone <path to the weights of the chosen Swin variant>
+    python -m torch.distributed.launch --nproc_per_node 1 --master_port 12345 main.py --cfg configs/swin/[swin_config].yaml --pascal <path to pascal database> --tasks semseg,normals,sal,human_parts --batch-size 32 --ckpt-freq=20 --epoch=300 --resume-backbone <path to the weights of the chosen Swin variant>
     ```
-    Swin variants and their weights can be found at the official [Swin Transformer repository](https://github.com/microsoft/Swin-Transformer). 
+    Swin variants and their weights can be found at the official [Swin Transformer repository](https://github.com/microsoft/Swin-Transformer).
+
+    The path arguments `--pascal` can be swapped for `--nyud`.
   
     The outputs will be saved in `output/` folder unless overridden by the argument `--output`.
 
-4. **Using the pre-trained model**
-
-    You can download the model weights from the following [link](https://drive.google.com/file/d/1AzzOgX6X0VFKyXUBXhwlgmba5NbPUq3m/view?usp=drive_link).
-
-    To run and evaluate the pre-trained model (assuming the model weight file is at `./mtlora.pth`), use `--eval` and `--resume <checkpoint>` as follows:
-    ```python
-    python -m torch.distributed.launch --nproc_per_node 1 --master_port 12345 main.py --cfg configs/mtlora/tiny_448/mtlora_tiny_448_r64_scale4_pertask.yaml --pascal <path to pascal database> --tasks semseg,normals,sal,human_parts --batch-size 32 --resume ./mtlora.pth --eval
-    ```
-  
-## Authorship
-Since the release commit is squashed, the GitHub contributors tab doesn't reflect the authors' contributions. The following authors contributed equally to this codebase:
-- [Ahmed Agiza](https://github.com/ahmed-agiza)
-- [Marina Neseem](https://github.com/marina-neseem)
 
 ## Citation
-If you find MTLoRA helpful in your research, please cite our paper:
+To cite FAAR, please use the following citation:
 ```
-@inproceedings{agiza2024mtlora,
-  title={MTLoRA: Low-Rank Adaptation Approach for Efficient Multi-Task Learning},
-  author={Agiza, Ahmed and Neseem, Marina and Reda, Sherief},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={16196--16205},
-  year={2024}
+@misc{fontana2026faarefficientfrequencyawaremultitask,
+      title={FAAR: Efficient Frequency-Aware Multi-Task Fine-Tuning via Automatic Rank Selection}, 
+      author={Maxime Fontana and Michael Spratling and Miaojing Shi},
+      year={2026},
+      eprint={2603.20403},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2603.20403}, 
 }
 ```
 
